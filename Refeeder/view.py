@@ -28,8 +28,8 @@ class ReFeeder(Feed):
         entries=feed.entries
         for entry in entries:
             result=self.translator.translate(entry.title+'#39898989'+entry.summary, src=self.src, dest='zh-cn').text.split(self.insert)
-            entry.summary = result[0]
-            entry.title = result[1]
+            entry.title = result[0]
+            entry.summary = result[1]
             print('yes')
         return entries
 
@@ -45,4 +45,5 @@ class ReFeeder(Feed):
 
     def item_link(self, item):
         return item.id
+
 
