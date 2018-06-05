@@ -20,5 +20,5 @@ from . import view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^rss=(.+)=(.+)$', view.ReFeeder()),
+    url(r'^rss=(.+)=([a-zA-z]+://[^\s]*)$', view.ReFeeder()),
 ]

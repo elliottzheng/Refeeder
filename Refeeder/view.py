@@ -1,6 +1,7 @@
 import feedparser
 from django.contrib.syndication.views import Feed
 from googletrans import Translator
+import re
 
 
 class ReFeeder(Feed):
@@ -11,22 +12,35 @@ class ReFeeder(Feed):
     description = "Transfor from source to your language"
 
     def get_object(self, request,src,url):
-        print(url)
         self.translator = Translator(service_urls=['translate.google.cn'])
         self.src=src
-        return feedparser.parse(url)
+        self.insert=self.translator.translate("#39898989", src=self.src, dest='zh-cn').text
+        print(type(request.get_full_path()))
+        url=str(request.get_full_path())
+
+        url=re.findall(r'/rss%3Den%3D([a-zA-z]+://[^\s]*)',url)[0]
+        print("url="+url)
+        feed=feedparser.parse(url)
+        print(len(feed.entries))
+        return feed
 
     def items(self,feed):
-        return feed.entries
+        entries=feed.entries
+        for entry in entries:
+            result=self.translator.translate(entry.title+'#39898989'+entry.summary, src=self.src, dest='zh-cn').text.split(self.insert)
+            entry.summary = result[0]
+            entry.title = result[1]
+            print('yes')
+        return entries
 
 
     def item_title(self, item):
-        return self.translator.translate(item.title, src=self.src, dest='zh-cn').text
+
+        return item.title
 
 
     def item_description(self, item):
-        print(1)
-        return self.translator.translate(item.summary, src=self.src, dest='zh-cn').text
+        return  item.summary
 
 
     def item_link(self, item):
