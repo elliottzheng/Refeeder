@@ -1,8 +1,7 @@
 import feedparser
 from django.contrib.syndication.views import Feed
 from googletrans import Translator
-from googletrans import LANGCODES
-from googletrans import LANGUAGES
+
 
 class ReFeeder(Feed):
 
